@@ -12,7 +12,7 @@ export function ThemeToggle() {
       variant="outline"
       size="icon"
       onClick={toggleTheme}
-      className="h-10 w-10 rounded-full"
+      className="h-10 w-10 rounded-full cursor-pointer"
       aria-label="Mavzuni o'zgartirish"
     >
       {theme === "dark" ? (
