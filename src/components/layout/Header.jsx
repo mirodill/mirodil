@@ -20,7 +20,7 @@ const Header = () => {
 
           <div className="flex items-center gap-3">
             <Avatar className="h-12 w-12">
-              <AvatarImage src={me_img} alt="Mirodil Mavlonov" className="object-cover" />
+              <AvatarImage src={me_img} alt="Mirodil Mavlonov" className="object-cover" loading="lazy"/>
             </Avatar>
             <h1 className="hidden sm:block font-semibold text-card-foreground text-lg sm:text-xl">
               Mirodil Mavlonov

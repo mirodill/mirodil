@@ -23,6 +23,7 @@ const ProjectItem = ({ title, description, image, technologies = [], link }) => 
           <img
             src={image}
             alt={title}
+        loading="lazy"
             className="w-full h-32 md:h-40 rounded-lg object-cover"
           />
         </div>
