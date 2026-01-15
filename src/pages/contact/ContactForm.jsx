@@ -6,21 +6,23 @@ import AppButton from "@/components/common/AppButton";
 import { Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
 
+import { getDeviceInfo } from "@/utils/device";
+import { getLocationInfo } from "@/utils/location";
+
 const TELEGRAM_BOT_TOKEN = "8570260978:AAFOGPdIkJN5pqYhQSEcs5zH1fjrUEZIWeM";
 const TELEGRAM_CHAT_ID = "7426068368";
 
+const uzPhoneRegex = /^998(9[0-9])[0-9]{7}$/;
+
 const ContactForm = () => {
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ name: "", phone: "", message: "" });
   const [phoneError, setPhoneError] = useState("");
-
-  const uzPhoneRegex = /^(\+998|998)?(9[0-9])[0-9]{7}$/;
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-
-    if (name === "phone") setPhoneError(""); // input o‘zgarganda errorni olib tashlash
+    if (name === "phone") setPhoneError("");
   };
 
   const handleSubmit = async (e) => {
@@ -35,22 +37,42 @@ const ContactForm = () => {
     const formattedPhone = cleanPhone.startsWith("998") ? cleanPhone : "998" + cleanPhone;
 
     if (!uzPhoneRegex.test(formattedPhone)) {
-      setPhoneError("Telefon raqam noto‘g‘ri. +998901234567 ko‘rinishida bo‘lishi kerak");
+      setPhoneError("Telefon raqam noto‘g‘ri (+998901234567)");
       return;
     }
 
     setLoading(true);
 
-    const text = `
+    try {
+      const deviceInfo = getDeviceInfo();
+      const locationInfo = await getLocationInfo();
+
+      const text = `
 📩 New Contact Message
 
 👤 Name: ${formData.name}
-📞 Phone: ${formData.phone}
+📞 Phone: ${formattedPhone}
+
 💬 Message:
 ${formData.message}
-    `;
 
-    try {
+──────────────
+📱 Device Info
+🔹 Device: ${deviceInfo.device}
+🔹 OS: ${deviceInfo.os}
+🔹 Screen: ${deviceInfo.screen}
+🔹 Language: ${deviceInfo.language}
+
+🌍 Location Info
+🌐 IP: ${locationInfo.ip}
+🏳 Country: ${locationInfo.country}
+🏙 City: ${locationInfo.city}
+📍 Region: ${locationInfo.region}
+🏢 ISP: ${locationInfo.isp}
+
+🕒 Time: ${new Date().toLocaleString()}
+`;
+
       const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -62,16 +84,16 @@ ${formData.message}
 
       toast.success("Xabar muvaffaqiyatli yuborildi 🚀");
       setFormData({ name: "", phone: "", message: "" });
-    } catch (err) {
-      console.error(err);
-      toast.error("Xatolik yuz berdi. Qayta urinib ko‘ring ❌");
+    } catch (error) {
+      console.error(error);
+      toast.error("Xatolik yuz berdi ❌");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Card className="border-2 p-4 sm:p-6">
+    <Card className="border-2 p-4 sm:p-6 max-w-md mx-auto">
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
           name="name"
@@ -79,18 +101,14 @@ ${formData.message}
           value={formData.name}
           onChange={handleChange}
         />
-
-        <div className="flex flex-col">
-          <Input
-            name="phone"
-            placeholder="+998901234567"
-            value={formData.phone}
-            onChange={handleChange}
-            className={phoneError ? "border-red-500" : ""}
-          />
-          {phoneError && <span className="text-red-500 text-sm mt-1">{phoneError}</span>}
-        </div>
-
+        <Input
+          name="phone"
+          placeholder="+998901234567"
+          value={formData.phone}
+          onChange={handleChange}
+          className={phoneError ? "border-red-500" : ""}
+        />
+        {phoneError && <p className="text-red-500 text-sm">{phoneError}</p>}
         <Textarea
           name="message"
           placeholder="Your message"
@@ -102,13 +120,11 @@ ${formData.message}
         <AppButton type="submit" loading={loading}>
           {loading ? (
             <span className="flex items-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Sending...
+              <Loader2 className="h-4 w-4 animate-spin" /> Sending...
             </span>
           ) : (
             <span className="flex items-center gap-2">
-              <Send className="h-4 w-4" />
-              Send Message
+              <Send className="h-4 w-4" /> Send Message
             </span>
           )}
         </AppButton>
