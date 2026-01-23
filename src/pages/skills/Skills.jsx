@@ -68,8 +68,7 @@ const skillGroups = [
     category: "Languages",
     skills: [
       { icon: uz, name: "Uzbek" },
-      { icon: en, name: "English" },
-      { icon: ru, name: "Russian" },
+      { icon: en, name: "English" }
     ],
   },
 ];
