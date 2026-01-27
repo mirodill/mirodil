@@ -11,9 +11,10 @@ const ProfileHeader = ({ cover, avatar }) => {
       />
 
       <div className="relative">
-        <div className="absolute bottom-22 left-3 sm:left-5">
+        <div className="absolute bottom-22 left-3 sm:left-5 hidden md:block">
           <MessageBox />
         </div>
+
 
         <img
           src={avatar}
