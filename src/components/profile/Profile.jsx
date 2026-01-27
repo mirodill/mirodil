@@ -2,7 +2,7 @@ import ProfileHeader from "./ProfileHeader";
 import ProfileInfo from "./ProfileInfo";
 import ProfileSocials from "./ProfileSocials";
 import ProfileActions from "./ProfileActions";
-import cover from "@/assets/images/1.jpg";
+import cover from "@/assets/images/banner.png";
 import avatar from "@/assets/images/me.jpg";
 import SectionCard from "../common/SectionCard";
 

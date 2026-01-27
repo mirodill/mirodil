@@ -19,16 +19,17 @@ import ScrollToTop from "./components/common/ScrollToTop";
 const App = () => {
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Sayt to‘liq yuklanganda ishlaydi
-    const handleLoad = () => {
-      setLoading(false);
-    };
+useEffect(() => {
+  const visited = sessionStorage.getItem("visited");
 
-    window.addEventListener("load", handleLoad);
+  if (visited) {
+    setLoading(false);
+  } else {
+    sessionStorage.setItem("visited", "true");
+    setTimeout(() => setLoading(false), 1200);
+  }
+}, []);
 
-    return () => window.removeEventListener("load", handleLoad);
-  }, []);
 
   if (loading) return <Loader />;
   return (

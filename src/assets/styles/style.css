@@ -6,3 +6,9 @@
     .animate-bounce-pulse {
       animation: bounce-pulse 1.5s infinite;
     }
+    .loader {
+  position: fixed;
+  inset: 0;
+  height: 100dvh; /* 100vh EMAS */
+  z-index: 9999;
+}
