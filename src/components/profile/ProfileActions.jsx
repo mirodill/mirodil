@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, FileText } from "lucide-react";
 
+
 const ProfileActions = () => {
   return (
     <div className="pt-6 flex flex-wrap gap-2">
@@ -21,7 +22,7 @@ const ProfileActions = () => {
       </a>
 
       {/* Resume Button */}
-      <a href="../../assets/resume.pdf" download>
+      <a href="../../../public/Mirodil_CV.pdf" download="Mirodil_CV.pdf">
         <Button variant="outline" className="flex items-center gap-2 cursor-pointer">
           <FileText className="h-4 w-4" />
           <span>Resume</span>
