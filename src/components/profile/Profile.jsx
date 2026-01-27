@@ -5,9 +5,12 @@ import ProfileActions from "./ProfileActions";
 import cover from "@/assets/images/banner.png";
 import avatar from "@/assets/images/me.jpg";
 import SectionCard from "../common/SectionCard";
+import { StarsCanvas } from "../canvas";
 
 const Profile = () => {
   return (
+    <>
+    <StarsCanvas/>
     <SectionCard noPadding>
       <ProfileHeader cover={cover} avatar={avatar} />
 
@@ -22,6 +25,7 @@ const Profile = () => {
         </div>
       </div>
     </SectionCard>
+    </>
   );
 };
 
