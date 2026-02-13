@@ -1,58 +1,72 @@
 import { useEffect, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 
+// Components
 import Loader from "./components/common/Loader";
-import Container from './components/layout/Container';
-import Header from './components/layout/Header';
-import Profile from "./components/profile/Profile";
-import Navbar from "./components/layout/Navbar";
-import Education from './pages/education/Education';
-import About from './pages/about/About';
-import Projects from './pages/projects/Projects';
-import Skills from './pages/skills/Skills';
-import Contact from './pages/contact/Contact';
-import Footer from "./components/layout/Footer";
 import ScrollToTop from "./components/common/ScrollToTop";
 import { Toaster } from "@/components/ui/sonner";
-import { StarsCanvas } from "./components/canvas";
+
+// Layouts & Pages
+import MainLayout from "@/layout/MainLayout";
+import DashboardLayout from "./pages/dashboard/Dashboard";
+import Category from './pages/category/Category';
+import Hero from './pages/hero/Hero';
+import Posts from './pages/posts/Posts';
+import UsersPage from './pages/usersPage/UsersPage';
+import AddPost from './pages/posts/AddPost';
+
+// Auth
+import ProtectedRoute from "./routes/ProtectedRoute";
+import { AuthProvider } from "@/providers/AuthContext";
 
 const App = () => {
-  const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const visited = sessionStorage.getItem("visited");
-
     if (visited) {
       setLoading(false);
     } else {
       sessionStorage.setItem("visited", "true");
-      setTimeout(() => setLoading(false), 1200);
+      const timer = setTimeout(() => setLoading(false), 1200);
+      return () => clearTimeout(timer);
     }
   }, []);
 
   if (loading) return <Loader />;
 
   return (
-      <Container className="flex flex-col min-h-screen relative z-10">
-        <Header />
-        <Profile />
-        <Navbar />
+    <AuthProvider>
+      <Routes>
+        {/* 1. PROTECTED ROUTES (Buni birinchi o'ringa qo'yamiz) */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Hero />} />
+          <Route path="hero" element={<Hero />} />
+          <Route path="posts" element={<Posts />} />
+          <Route path="users" element={<UsersPage />} />
+          <Route path="addpost" element={<AddPost />} />
+          <Route path="addposts/:id" element={<AddPost />} />
+          <Route path="category" element={<Category />} />
+        </Route>
 
-        <main className="flex-1 w-full">
-          <Routes>
-            <Route path="/" element={<About />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/education" element={<Education />} />
-            <Route path="/skills" element={<Skills />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </main>
+        {/* 2. PUBLIC ROUTES (Dashboarddan keyin kelishi shart) */}
+        {/* path="/*" o'rniga aniqroq mantiq ishlating yoki eng oxiriga qo'ying */}
+        <Route path="/*" element={<MainLayout />} />
 
-        <Footer />
+        {/* 3. 404 NOT FOUND */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
 
       <ScrollToTop />
       <Toaster richColors position="top-right" />
-      </Container>
+    </AuthProvider>
   );
 };
 

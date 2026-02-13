@@ -1,11 +1,11 @@
-import ProfileHeader from "./ProfileHeader";
-import ProfileInfo from "./ProfileInfo";
-import ProfileSocials from "./ProfileSocials";
-import ProfileActions from "./ProfileActions";
+import ProfileHeader from "./components/ProfileHeader";
+import ProfileInfo from "./components/ProfileInfo";
+import ProfileSocials from "./components/ProfileSocials";
+import ProfileActions from "./components/ProfileActions";
 import cover from "@/assets/images/banner.png";
 import avatar from "@/assets/images/me.jpg";
-import SectionCard from "../common/SectionCard";
-import { StarsCanvas } from "../canvas";
+import SectionCard from "@/components/common/SectionCard";
+import { StarsCanvas } from "@/components/canvas";
 
 const Profile = () => {
   return (

@@ -1,4 +1,4 @@
-import MessageBox from "../MessageBox";
+import MessageBox from "@/components/shared/MessageBox";
 
 const ProfileHeader = ({ cover, avatar }) => {
   return (

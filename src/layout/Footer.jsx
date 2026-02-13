@@ -1,4 +1,4 @@
-import SectionCard from "../common/SectionCard";
+import SectionCard from "@/components/common/SectionCard";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();

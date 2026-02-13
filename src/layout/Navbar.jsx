@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import SectionCard from "../common/SectionCard";
+import SectionCard from "@/components/common/SectionCard";
 import { Home, Briefcase, BookOpen, Code, Mail, Sun, Moon } from "lucide-react";
 import { useState } from "react";
 
@@ -7,6 +7,7 @@ const navItems = [
   { path: "/", label: "About", icon: Home },
   { path: "/projects", label: "Projects", icon: Briefcase },
   { path: "/education", label: "Education", icon: BookOpen },
+  { path: "/blog", label: "Blog", icon: BookOpen },
   { path: "/skills", label: "Skills", icon: Code },
   { path: "/contact", label: "Contact", icon: Mail },
 ];
@@ -44,7 +45,7 @@ const Navbar = () => {
         </ul>
       </SectionCard>
 
-      <div className="fixed bottom-0 left-0 w-full sm:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-inner z-50">
+      <div className="sticky top-5 flex bottom-0 left-0 w-full sm:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-inner z-50">
         <ul className="flex justify-around py-2">
           {navItems.map((item) => {
             const Icon = item.icon;
