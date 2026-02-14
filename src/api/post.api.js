@@ -9,7 +9,7 @@ export const getPostById = (id) => API.get(`/posts/${id}`);
 // 🔹 Bitta postni SLUG orqali olish (Blog Detail sahifasi uchun)
 // Eslatma: Backendda /api/v1/posts/slug/test-post ko'rinishida bo'lishi kerak
 export const getPostBySlug = (slug) => API.get(`/posts/slug/${slug}`);
-
+export const getCategories = () => API.get("/categories");
 // 🔹 Post yaratish
 // Data tarkibi: { title, content, slug, status, category, tags, cover_image }
 export const createPost = (data) => API.post("/posts", data);

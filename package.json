@@ -29,6 +29,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.26.1",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.562.0",
@@ -47,6 +49,7 @@
     "simplemde": "^1.11.2",
     "socket.io-client": "^4.8.3",
     "sonner": "^2.0.7",
+    "swiper": "^12.1.1",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18",
     "three": "^0.182.0"
