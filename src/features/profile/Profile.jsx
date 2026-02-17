@@ -11,7 +11,7 @@ const Profile = () => {
   return (
     <>
     <StarsCanvas/>
-    <SectionCard noPadding>
+    <SectionCard noPadding className="p-0">
       <ProfileHeader cover={cover} avatar={avatar} />
 
       <div className="pt-18 px-4 sm:px-6 pb-5">

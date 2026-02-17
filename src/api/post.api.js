@@ -23,3 +23,12 @@ export const deletePost = (id) => API.delete(`/posts/${id}`);
 // 🔹 Post ko'rilganini hisobga olish (Unique View)
 // Buni BlogDetail sahifasida useEffect ichida chaqirasiz
 export const trackPostView = (id) => API.post(`/posts/${id}/view`);
+
+export const reactToPost = (postId, type) => {
+  // userId ni body'da yuborish shart emas, backend tokendan olishi kerak (xavfsizlik uchun)
+  return API.post(`/interactions/react/${postId}`, { type });
+};
+
+export const toggleSavePost = (postId) => {
+  return API.post(`/interactions/save/${postId}`);
+}

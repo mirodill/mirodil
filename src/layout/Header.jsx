@@ -1,158 +1,166 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, NavLink } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import SectionCard from "@/components/common/SectionCard";
 import { 
-  User, LayoutDashboard, Loader2, LogIn, 
-  Settings, LogOut, ChevronDown 
+  Home, Briefcase, BookOpen, Code, Mail, 
+  LayoutDashboard, Loader2, LogOut, Flame
 } from "lucide-react";
 import { getProfile } from "@/api/auth.api";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
 const Header = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
+      if (!token) { setLoading(false); return; }
       try {
-        setLoading(true);
         const res = await getProfile();
-        const userData = res.data?.user || res.data?.data || res.data;
-        setUser(userData);
+        setUser(res.data?.user || res.data?.data || res.data);
       } catch (err) {
         console.error("Profil yuklanmadi:", err);
-      } finally {
-        setLoading(false);
-      }
+      } finally { setLoading(false); }
     };
     fetchProfile();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/";
-  };
-
-  const isAdmin = user?.role === "admin";
+  const navItems = [
+    { path: "/", label: "Haqimda", icon: Home },
+    { path: "/projects", label: "Loyihalar", icon: Briefcase },
+    { path: "/blog", label: "Blog", icon: BookOpen },
+    { path: "/skills", label: "Skills", icon: Code },
+    { path: "/contact", label: "Aloqa", icon: Mail },
+  ];
 
   return (
-    <header className="w-full">
-      <SectionCard className="border-none shadow-sm bg-white dark:bg-gray-950">
-        <div className="flex items-center justify-between w-full px-4 sm:px-6">
-          
-          {/* CHAP TOMON: Logo */}
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2 group transition-all">
-              <div className="bg-blue-600 p-2 rounded-lg text-white group-hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition">
-                <LayoutDashboard size={20} />
+    <>
+      {/* Header foni orqadagi narsalarni to'sib turishi uchun 
+        bg-background/95 va backdrop-blur ishlatildi.
+      */}
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 
+        ${isScrolled 
+          ? "py-2 bg-background/80 backdrop-blur-md border-b shadow-sm" 
+          : "py-4 bg-background"}`}>
+        
+        <div className="max-w-7xl mx-auto px-4 md:px-10">
+          <div className="flex items-center justify-between py-2 transition-all duration-300">
+            
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="size-9 flex items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+                <Flame size={20} fill="currentColor" />
               </div>
-              <h1 className="font-bold text-xl tracking-tight hidden md:block">
-                Mirodil <span className="text-blue-600">Codes</span>
-              </h1>
+              <span className="text-xl font-bold tracking-tight text-foreground uppercase italic">
+                Mirodil<span className="text-blue-600">.</span>
+              </span>
             </Link>
-          </div>
 
-          {/* O'NG TOMON */}
-          <div className="flex items-center gap-3">
-            {loading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
-            ) : user ? (
-              <div className="flex items-center gap-2">
+            {/* Nav Links (Desktop) */}
+            <nav className="hidden lg:block">
+              <ul className="flex items-center gap-1">
+                {navItems.map((item) => (
+                  <li key={item.path}>
+                    <NavLink
+                      to={item.path}
+                      className={({ isActive }) => `
+                        px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg
+                        ${isActive 
+                          ? "text-blue-600 bg-blue-500/10 dark:text-blue-400" 
+                          : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                        }
+                      `}
+                    >
+                      {item.label}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {/* Actions */}
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+
+              {loading ? (
+                <Loader2 className="size-5 animate-spin text-blue-500" />
+              ) : user ? (
                 <Popover>
                   <PopoverTrigger asChild>
-                    <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 p-1 pr-3 rounded-full transition-all border border-transparent hover:border-gray-200 dark:hover:border-gray-800">
-                      <Avatar className="h-9 w-9 border-2 border-blue-500/20">
+                    <button className="outline-none group">
+                      <Avatar className="size-9 border transition-all group-hover:border-blue-500">
                         <AvatarImage src={user.avatar} className="object-cover" />
-                        <AvatarFallback className="bg-blue-50 text-blue-600">
-                          <User size={18} />
-                        </AvatarFallback>
+                        <AvatarFallback className="bg-accent text-foreground text-xs font-bold">M</AvatarFallback>
                       </Avatar>
-                      <ChevronDown size={14} className="text-gray-500" />
-                    </div>
+                    </button>
                   </PopoverTrigger>
-                  
-                  <PopoverContent className="w-72 mt-2 p-0 bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 shadow-xl rounded-2xl overflow-hidden" align="end">
-                    {/* User Card Header */}
-                    <div className="p-4 bg-blue-600 dark:bg-blue-700 text-white">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-12 w-12 border-2 border-white/20">
-                          <AvatarImage src={user.avatar} className="object-cover" />
-                          <AvatarFallback><User /></AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col">
-                          <span className="font-bold truncate w-40">{user.full_name}</span>
-                          <span className="text-xs text-blue-100 italic">{user.username}</span>
-                        </div>
+                  <PopoverContent className="w-56 mt-2 p-1 rounded-xl bg-popover border shadow-xl" align="end">
+                      <div className="px-3 py-2 border-b border-border/50">
+                        <p className="text-sm font-bold truncate text-foreground">{user.full_name}</p>
+                        <p className="text-[11px] text-muted-foreground">{user.username || 'user'}</p>
                       </div>
-                    </div>
-
-                    {/* Menu Items */}
-                    <div className="p-2 space-y-1">
-                      
-                      {/* FAQAT ADMINLAR UCHUN DASHBOARD */}
-                      {isAdmin && (
-                        <button 
-                          onClick={() => navigate("/dashboard")}
-                          className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg transition"
+                      <div className="p-1">
+                        {user.role === "admin" && (
+                          <Button variant="ghost" className="w-full justify-start gap-2 h-9 text-sm rounded-lg" onClick={() => navigate("/dashboard")}>
+                            <LayoutDashboard size={15} /> Dashboard
+                          </Button>
+                        )}
+                        <Button 
+                          variant="ghost" 
+                          className="w-full justify-start gap-2 h-9 text-sm text-destructive hover:text-destructive hover:bg-destructive/10 rounded-lg" 
+                          onClick={() => { localStorage.removeItem("token"); window.location.href="/"; }}
                         >
-                          <LayoutDashboard size={18} className="text-orange-500" />
-                          Admin Dashboard
-                        </button>
-                      )}
-
-                      {/* SOZLAMALAR (TUNGI REJIM) */}
-                      <div className="flex items-center justify-between px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg transition">
-                        <div className="flex items-center gap-3">
-                          <Settings size={18} className="text-gray-500" />
-                          Tungi rejim
-                        </div>
-                        <ThemeToggle />
+                          <LogOut size={15} /> Chiqish
+                        </Button>
                       </div>
-
-                      <div className="h-[1px] bg-gray-100 dark:bg-gray-800 my-1" />
-
-                      {/* CHIQISH */}
-                      <button 
-                        onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition"
-                      >
-                        <LogOut size={18} />
-                        Chiqish
-                      </button>
-                    </div>
                   </PopoverContent>
                 </Popover>
-              </div>
-            ) : (
-              <div className="flex items-center gap-3">
-                <ThemeToggle />
+              ) : (
                 <Button 
                   onClick={() => navigate("/login")}
-                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6"
+                  className="bg-primary hover:opacity-90 text-primary-foreground rounded-lg px-6 h-9 text-sm font-bold transition-all shadow-sm"
                 >
-                  <LogIn size={18} className="mr-2" />
                   Kirish
                 </Button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </SectionCard>
-    </header>
+      </header>
+
+      {/* DIQQAT: Header fixed bo'lgani uchun sahifa mazmuni uning tegida qolib ketmasligi uchun
+        bo'sh joy (Spacer) qo'shib qo'yamiz.
+      */}
+      <div className="h-20 lg:h-24"></div>
+
+      {/* MOBILE BOTTOM NAV */}
+      <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-sm z-50">
+        <nav className="bg-background/95 backdrop-blur-lg rounded-2xl p-1.5 flex justify-around items-center shadow-2xl border border-border">
+           {navItems.map((item) => {
+             const Icon = item.icon;
+             return (
+               <NavLink key={item.path} to={item.path} className={({isActive}) => `
+                 p-3 rounded-xl transition-all duration-200
+                 ${isActive ? "bg-primary text-primary-foreground shadow-md" : "text-muted-foreground hover:bg-accent"}
+               `}>
+                 <Icon size={20} />
+               </NavLink>
+             )
+           })}
+        </nav>
+      </div>
+    </>
   );
 };
 

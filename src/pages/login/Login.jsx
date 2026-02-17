@@ -38,9 +38,9 @@ export default function Login() {
       // ROLE TEKSHIRISH
       // Agar role 'admin' bo'lsa dashboardga, aks holda bosh sahifaga
       if (data.user?.role === 'admin') {
-        window.location.href = '/dashboard'; // Admin uchun dashboard
+        window.location.href = '/mirodil/dashboard'; // Admin uchun dashboard
       } else {
-        window.location.href = '/'; // Oddiy user uchun bosh sahifa
+        window.location.href = '/mirodil/'; // Oddiy user uchun bosh sahifa
       }
       
     } catch (err) {

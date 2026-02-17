@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import Container from "@/layout/Container"; // components ichiga ko'chirdik
 import Header from "@/layout/Header"; // Layoutga tegishli qismlar
-import Navbar from "@/layout/Navbar";
+// import Navbar from "@/layout/Navbar";
 import Footer from "@/layout/Footer";
 import Profile from "@/features/profile/Profile";
 import AppRoutes from "@/routes/AppRoutes";
@@ -21,7 +21,7 @@ const MainLayout = () => {
       {/* Blog va Auth sahifalarida Profile ko'rinmaydi */}
       {!isBlogPage && !isAuthPage && <Profile />}
       
-      <Navbar />
+      {/* <Navbar /> */}
 
       <main className="flex-1 w-full py-6">
         <AppRoutes />
